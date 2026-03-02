@@ -27,7 +27,7 @@
                             </div>
 
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-success btn-lg">Create Account</button>
+                                <button type="submit" class="btn btn-success btn-lg" id="submitBtn" disabled>Create Account</button>
                             </div>
                         </form>
                     </div>
@@ -42,3 +42,7 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block script %}
+{% static "js/signup.js" %}
+{% endblock script %}
