@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     #local apps
     "pages",
-    "accounts"
+    "accounts",
+    "recipes"
 ]
 
 MIDDLEWARE = [
