@@ -10,7 +10,7 @@
             <div class="col-md-8 signup-container">
                 
                 <div class="text-center mb-4">
-                    <h2 class="fw-bold">Join the community! 🍳</h2>
+                    <h2 class="fw-bold">Join the community!</h2>
                     <p class="text-muted">Create an account and start sharing recipes.</p>
                 </div>
 
@@ -23,7 +23,7 @@
                           
                             <div class="mb-4 form-check">
                                 <input type="checkbox" class="form-check-input" id="terms">
-                                <label class="form-check-label small" for="terms">I accept the terms of use and the privacy policy.</label>
+                                <label class="form-check-label small" for="terms">I accept the <a href="#" class="link-terms" data-bs-toggle="modal" data-bs-target="#termsModal">terms of use</a> and the privacy policy.</label>
                             </div>
 
                             <div class="d-grid">
@@ -41,8 +41,11 @@
             </div>
         </div>
     </div>
+
+    {% include 'includes/terms.html' %}
+
 {% endblock content %}
 
 {% block script %}
-{% static "js/signup.js" %}
+    <script src="{% static 'js/signup.js' %}"></script>
 {% endblock script %}
