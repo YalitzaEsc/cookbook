@@ -72,13 +72,13 @@
         </div>
     </main>
 
-    <footer class="py-4 bg-light mt-auto border-top">
-        <div class="container text-center">
-            <p class="text-muted mb-0">&copy; 2026 Community Cookbook. Built with Django & Bootstrap.</p>
-        </div>
-    </footer>
-
 {% endblock content %}
+
+{% block footer %}
+    {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+
 
 
 

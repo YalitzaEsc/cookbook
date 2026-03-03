@@ -2,7 +2,10 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block styles %}{% static 'css/login.css' %}{% endblock %}
+{% block styles %}
+<link href="{% static 'css/login.css' %}" rel="stylesheet">
+{% endblock %}
+
 
 {% block content %}
 <div class="container">
@@ -10,7 +13,7 @@
             <div class="col-md-6 login-container">
                 
                 <div class="text-center mb-4">
-                    <h2 class="fw-bold">🍳 Cookbook</h2>
+                    <h2 class="fw-bold">The Cookbook</h2>
                     <p class="text-muted">¡Welcome back, Chef!</p>
                 </div>
 
@@ -32,7 +35,7 @@
                     </div>
                 </div>
 
-                <div class="text-center mt-4">
+                <div class="text-center mt-4"  id="homepag">
                     <p>Don't have an account? <a href="{% url 'signup' %}" class="text-decoration-none fw-bold">Sign Up</a></p>
                     <a href="{% url 'home' %}" class="text-muted small">← Homepage</a>
                 </div>
@@ -42,4 +45,8 @@
     </div>
 
 {% endblock content %}
+
+{% block footer %}
+    {% include 'includes/footer.html' %}
+{% endblock footer %}
 

@@ -2,7 +2,9 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block styles %}{% static 'css/signup.css' %}{% endblock %}
+{% block styles %}
+<link href="{% static '/accounts/css/signup.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
    <div class="container">
@@ -49,3 +51,7 @@
 {% block script %}
     <script src="{% static 'js/signup.js' %}"></script>
 {% endblock script %}
+
+{% block footer %}
+    {% include 'includes/footer.html' %}
+{% endblock footer %}

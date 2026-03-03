@@ -14,7 +14,7 @@ class Recipe(models.Model):
     title = models.CharField(max_length=100)
     date_of_post = models.DateTimeField(auto_now=True)
     cooking_time = models.PositiveIntegerField() 
-    instrucions = models.TextField()
+    instructions = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
