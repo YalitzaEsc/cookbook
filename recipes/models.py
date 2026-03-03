@@ -4,12 +4,6 @@ from django.urls import reverse
 
 # Create your models here.
 
-class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return self.name[:50]
-
 class Recipe(models.Model):
     title = models.CharField(max_length=100)
     date_of_post = models.DateTimeField(auto_now=True)
@@ -18,11 +12,6 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
-    )
-    ingredients = models.ManyToManyField(
-        Ingredient,
-        through='RecipeIngredient',
-        related_name='recipes'
     )
     
     def __str__(self):
@@ -34,10 +23,10 @@ class Recipe(models.Model):
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    ingredient = models.CharField(max_length=150)
     quantity = models.CharField(max_length=100)
     
     def __str__(self):
-        return f'{self.quantity} of {self.ingredient.name}.'
+        return f'{self.quantity} of {self.ingredient}.'
 
     

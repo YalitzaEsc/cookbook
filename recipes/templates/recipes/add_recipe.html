@@ -1,23 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
-{% block page_title %}
-    Add Recipe
-{% endblock page_title %}
+{% block page_title %} Add Recipe {% endblock page_title %}
 
 {% block styles %}
-    <link href="{% static '/recipes/css/add_recipe.html' %}" rel="stylesheet">
+    <link href="{% static 'recipes/css/add_recipe.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock styles %}
-
-{% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">🍳 The Cookbook</a>
-        </div>
-    </nav>
-{% endblock navbar %}
 
 {% block content %}
     <div class="container my-5">
@@ -36,7 +27,8 @@
                     </button>
                 </div>
 
-                <form id="recipeForm" class="card shadow-sm">
+                <form id="recipeForm" class="card shadow-sm" method="POST">
+                    {% csrf_token %}
                     <div class="card-body p-4 p-md-5">
                         <div class="row g-4">
                             
@@ -46,22 +38,22 @@
                                 </h4>
                                 
                                 <div class="mb-4">
-                                    <label for="title" class="form-label">Name of the Recipe</label>
-                                    <input type="text" class="form-control form-control-lg" id="title" placeholder="Ex: Tacos al Pastor Supremos">
+                                    <label for="{{ form.title.id_for_label }}" class="form-label">Name of the Recipe</label>
+                                    {% render_field form.title class="form-control form-control-lg" placeholder="E.g. Tacos al Pastor" %}
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="cooking_time" class="form-label">Cooking Time</label>
+                                    <label for="{{ form.cooking_time.id_for_label }}" class="form-label">Cooking Time</label>
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text bg-white"><i class="bi bi-stopwatch text-muted"></i></span>
-                                        <input type="number" class="form-control" id="cooking_time" placeholder="Ex: 45">
+                                        {% render_field form.cooking_time class="form-control" placeholder="E.g. 45" %}
                                         <span class="input-group-text bg-light text-muted">Minutes</span>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="instructions" class="form-label">Preparations Steps</label>
-                                    <textarea class="form-control" id="instructions" rows="10" placeholder="Type step by step thoroughly..."></textarea>
+                                    <label for="{{ form.instructions.id_for_label }}" class="form-label">Preparations Steps</label>
+                                    {% render_field form.instructions class="form-control" rows="10" placeholder="Type step by step thoroughly..." %}
                                 </div>
                             </div>
 
@@ -70,44 +62,42 @@
                                     <i class="bi bi-egg-fried me-2"></i>Ingredients
                                 </h4>
                                 
-                                <p class="text-muted small mb-3">Add the ingredients and the exact amount (ex: 200g, 2 pieces, 1 spoon).</p>
+                                <p class="text-muted small mb-3">Add the ingredients and the exact amount.</p>
                                 
+                                {{ ingredients.management_form }}
+
                                 <div id="ingredient-container" class="border rounded bg-light p-2 mb-3">
                                     
-                                    <div class="row g-2 mb-2 pb-2 border-bottom fw-bold text-muted small">
-                                        <div class="col-7">Ingredient</div>
+                                    <div class="row g-2 mb-2 pb-2 border-bottom fw-bold text-muted small text-center">
+                                        <div class="col-7 text-start">Ingredient</div>
                                         <div class="col-4">Amount</div>
                                         <div class="col-1"></div>
                                     </div>
 
-                                    <div class="row g-2 ingredient-row align-items-center">
+                                    {% for ingredient_form in ingredients %}
+                                    <div class="row g-2 ingredient-row align-items-center mb-2">
+                                        {% for hidden in ingredient_form.hidden_fields %} {{ hidden }} {% endfor %}
+                                        
                                         <div class="col-7">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Ex: Wheat Flour">
+                                            {% render_field ingredient_form.ingredient class="form-control form-control-sm" %}
                                         </div>
                                         <div class="col-4">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Ex: 500g">
+                                            {% render_field ingredient_form.quantity class="form-control form-control-sm" placeholder="E.g. 500g" %}
                                         </div>
                                         <div class="col-1 text-end">
-                                            <button type="button" class="btn btn-link text-danger p-0"><i class="bi bi-trash3"></i></button>
+                                            {% if ingredients.can_delete %}
+                                                <div class="d-none">{{ ingredient_form.DELETE }}</div>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-link text-danger p-0 remove-ingredient">
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
                                         </div>
                                     </div>
-
-                                    <div class="row g-2 ingredient-row align-items-center">
-                                        <div class="col-7">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Ex: Eggs">
-                                        </div>
-                                        <div class="col-4">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Ex: 3 pieces">
-                                        </div>
-                                        <div class="col-1 text-end">
-                                            <button type="button" class="btn btn-link text-danger p-0"><i class="bi bi-trash3"></i></button>
-                                        </div>
-                                    </div>
-                                    
-                                    </div>
+                                    {% endfor %}
+                                </div>
 
                                 <div class="text-center mt-3">
-                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill">
+                                    <button type="button" id="add-ingredient" class="btn btn-outline-primary btn-sm rounded-pill">
                                         <i class="bi bi-plus-circle me-1"></i> Add Extra Ingredient
                                     </button>
                                 </div>
@@ -115,26 +105,18 @@
 
                         </div>
                     </div>
-                    
-                    <div class="card-footer bg-light d-md-none p-3 text-center">
-                        <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill fw-bold">
-                            <i class="bi bi-cloud-upload me-2"></i>Post Recipe
-                        </button>
-                    </div>
                 </form>
 
             </div>
         </div>
     </div>
-
 {% endblock content %}
 
 {% block footer %}
-    {% include 'includes/footer.html' %}
+    {% include "includes/footer.html" %}
 {% endblock footer %}
 
-
-
-
-
+{% block scripts %}
+    <script src="{% static 'recipes/js/add_recipe.js' %}"></script>
+{% endblock scripts %}
 

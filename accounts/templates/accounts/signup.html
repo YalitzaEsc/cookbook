@@ -48,10 +48,12 @@
 
 {% endblock content %}
 
-{% block script %}
-    <script src="{% static 'js/signup.js' %}"></script>
-{% endblock script %}
 
 {% block footer %}
     {% include 'includes/footer.html' %}
 {% endblock footer %}
+
+
+{% block scripts %}
+    <script src="{% static '/accounts/js/signup.js' %}"></script>
+{% endblock scripts %}

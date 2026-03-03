@@ -7,14 +7,15 @@ class RecipeForm(forms.ModelForm):
         model = Recipe
         fields = ['title', 'cooking_time', 'instructions']
         
-        widgets = {
-            'instructions': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Type the steps here...'}),
-        }
-
+        
 IngredientFormSet = inlineformset_factory(
     Recipe,                                 #Modelo padre
     RecipeIngredient,                       #Modelo Hijo
     fields=('ingredient', 'quantity'),      #Campos a llenar
     extra=3,                                #Filas extra
-    can_delete=True                         #Permite borrar ingredientes
+    can_delete=True,                        #Permite borrar ingredientes
+    widgets={
+        'ingredient': forms.TextInput(attrs={'placeholder': 'E.g. Flour'}),
+        'quantity': forms.TextInput(attrs={'placeholder': 'E.g. 500g'})
+    }
 )
