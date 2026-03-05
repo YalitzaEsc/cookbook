@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -40,3 +42,12 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
     template_name = "recipes/detail_recipe.html"
     context_object_name = "recipe"
         
+
+@login_required
+def toggle_favorite(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.favorites.filter(id=request.user.id).exists():
+        recipe.favorites.remove(request.user)
+    else:
+        recipe.favorites.add(request.user)
+    return redirect('recipe_detail', pk=pk)
