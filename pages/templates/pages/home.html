@@ -9,11 +9,11 @@
 {% endblock navbar %}
 
 {% block header %}
-    <header class="hero-section text-center">
+    <header class="hero-section text-center", style="margin-top:30px;">
         <div class="container">
             <h1 class="display-4 fw-bold">Share Your Secret Recipes</h1>
             <p class="lead text-muted">Join a community of home cooks. Discover, save, and share your favorite dishes.</p>
-            <a href="#" class="btn btn-primary btn-lg px-4 mt-3">Browse All Recipes</a>
+            <a href="#" class="btn btn-success btn-lg px-4 mt-3">Browse All Recipes</a>
         </div>
     </header>
 {% endblock header %}
@@ -25,49 +25,22 @@
         </div>
 
         <div class="row g-4">
+            {% for recipe in recipes %}
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 shadow-sm text-dark">
                     <div class="card-body">
-                        <span class="badge bg-success mb-2">Healthy</span>
-                        <h5 class="card-title">Ultimate Garden Bowl</h5>
-                        <p class="card-text text-muted small">By Chef Mario • 15 mins</p>
-                        <p class="card-text">A fresh mix of seasonal greens, avocado, and a zesty lemon dressing.</p>
+                        <span class="badge bg-success mb-2">{{ recipe.category }}</span>
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text text-muted small">By Chef {{ recipe.author }} • {{ recipe.cooking_time }} mins</p>
+                        <p class="card-text">{{ recipe.short_description|truncatechars:90 }}</p>
                     </div>
                     <div class="card-footer bg-transparent border-top-0 pb-3">
-                        <a href="#" class="btn btn-outline-primary w-100">View Recipe</a>
+                        <a href="{{ recipe.get_absolute_url }}" class="btn btn-outline-success w-100">View Recipe</a>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm text-dark">
-                    <img src="" class="card-img-top recipe-card-img" alt="Pizza">
-                    <div class="card-body">
-                        <span class="badge bg-danger mb-2">Dinner</span>
-                        <h5 class="card-title">Hand-Tossed Margherita</h5>
-                        <p class="card-text text-muted small">By Sarah J. • 45 mins</p>
-                        <p class="card-text">Traditional Italian pizza with fresh basil, mozzarella, and tomato sauce.</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-top-0 pb-3">
-                        <a href="#" class="btn btn-outline-primary w-100">View Recipe</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm text-dark">
-                    <img src="https://images.unsplash.com/photo-1484723088628-820983933020?w=500" class="card-img-top recipe-card-img" alt="Pancakes">
-                    <div class="card-body">
-                        <span class="badge bg-warning text-dark mb-2">Breakfast</span>
-                        <h5 class="card-title">Fluffy Blueberry Stack</h5>
-                        <p class="card-text text-muted small">By Grandma Rose • 20 mins</p>
-                        <p class="card-text">Classic buttermilk pancakes bursting with fresh blueberries and maple syrup.</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-top-0 pb-3">
-                        <a href="#" class="btn btn-outline-primary w-100">View Recipe</a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
+        
         </div>
     </main>
 

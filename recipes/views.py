@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse
 from .models import Recipe
 from .forms import RecipeForm, IngredientFormSet
 
@@ -13,7 +13,6 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     form_class = RecipeForm
     template_name = 'recipes/add_recipe.html'
-    success_url = reverse_lazy('home')
     
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs) 
@@ -35,6 +34,9 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
             return super().form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form))
+    
+    def get_success_url(self):
+        return reverse('recipe_detail', kwargs={'pk': self.object.pk})
 
 
 class RecipeDetailView(LoginRequiredMixin, DetailView):
@@ -42,7 +44,7 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
     template_name = "recipes/detail_recipe.html"
     context_object_name = "recipe"
         
-
+        
 @login_required
 def toggle_favorite(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
@@ -51,3 +53,13 @@ def toggle_favorite(request, pk):
     else:
         recipe.favorites.add(request.user)
     return redirect('recipe_detail', pk=pk)
+
+
+class RecipeUpdateView(UpdateView):
+    model = Recipe
+    fields = ['title', 'category', 'short_description', 'cooking_time', 'instructions']
+    template_name = 'recipes/update_recipe.html'
+    
+    def test_func(self):
+        recipe = self.get_object()
+        return recipe.author == self.request.user

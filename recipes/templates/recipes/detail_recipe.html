@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="mt-5 pt-4 border-top mb-5"> {% if recipe.author.pk == request.user.pk %}
-                        <a href="#" class="btn btn-warning px-4 me-2">Edit Recipe</a>
+                        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-warning px-4 me-2">Edit Recipe</a>
                         <a href="#" class="btn btn-outline-danger px-4">Delete</a>
                     {% endif %}
                 </div>

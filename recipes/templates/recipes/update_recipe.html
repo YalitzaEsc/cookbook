@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block page_title %} Add Recipe {% endblock page_title %}
+{% block page_title %} Edit Recipe - {{ form.instance.title }} {% endblock page_title %}
 
 {% block styles %}
     <link href="{% static 'recipes/css/add_recipe.css' %}" rel="stylesheet">
@@ -16,29 +16,40 @@
                 
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="d-flex align-items-center">
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary me-3 rounded-pill">
+                        <a href="{% url 'recipe_detail' form.instance.pk %}" class="btn btn-outline-secondary me-3 rounded-pill">
                             <i class="bi bi-arrow-left"></i>
                         </a>
-                        <h1 class="fw-bold mb-0 text-dark">Create New Recipe</h1>
+                        <h1 class="fw-bold mb-0 text-dark">Edit Recipe</h1>
                     </div>
-                    <button type="submit" form="recipeForm" class="btn btn-success btn-lg px-4 rounded-pill fw-bold">
-                        <i class="bi bi-cloud-upload me-2"></i>Post
-                    </button>
+                    <div>
+                        <button type="submit" form="recipeForm" class="btn btn-primary btn-lg px-4 rounded-pill fw-bold">
+                            <i class="bi bi-check2-circle me-2"></i>Save Changes
+                        </button>
+                    </div>
                 </div>
 
                 <form id="recipeForm" class="card shadow-sm" method="POST">
                     {% csrf_token %}
+                    
+                    {% if form.errors or ingredients.errors %}
+                    <div class="alert alert-danger mx-4 mt-4 mb-0 py-2 small">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Please correct the errors below.
+                    </div>
+                    {% endif %}
+
                     <div class="card-body p-4 p-md-5">
                         <div class="row g-4">
                             
                             <div class="col-md-7 border-end pe-md-4">
                                 <h4 class="text-primary mb-4 fw-bold">
-                                    <i class="bi bi-info-circle me-2"></i>Recipe Details
+                                    <i class="bi bi-pencil-square me-2"></i>Recipe Information
                                 </h4>
                                 
                                 <div class="mb-4">
                                     <label for="{{ form.title.id_for_label }}" class="form-label fw-semibold">Name of the Recipe</label>
-                                    {% render_field form.title class="form-control form-control-lg border-2" placeholder="E.g. Tacos al Pastor" %}
+                                    {% render_field form.title class="form-control form-control-lg border-2" %}
+                                    {% if form.title.errors %}<div class="text-danger small">{{ form.title.errors }}</div>{% endif %}
                                 </div>
 
                                 <div class="mb-4">
@@ -47,26 +58,25 @@
                                         <span class="input-group-text bg-white border-2 border-end-0"><i class="bi bi-tag text-primary"></i></span>
                                         {% render_field form.category class="form-select border-2 border-start-0" %}
                                     </div>
-                                    <div class="form-text text-muted">Select the type of dish you're creating.</div>
                                 </div>
 
                                 <div class="mb-4">
                                     <label for="{{ form.short_description.id_for_label }}" class="form-label fw-semibold">Short Description</label>
-                                    {% render_field form.short_description class="form-control border-2" rows="2" placeholder="Briefly describe your dish (max. 150 characters)..." %}
+                                    {% render_field form.short_description class="form-control border-2" rows="2" %}
                                 </div>
 
                                 <div class="mb-4">
                                     <label for="{{ form.cooking_time.id_for_label }}" class="form-label fw-semibold">Cooking Time</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-white border-2 border-end-0"><i class="bi bi-stopwatch text-muted"></i></span>
-                                        {% render_field form.cooking_time class="form-control border-2 border-start-0 border-end-0" placeholder="E.g. 45" %}
+                                        {% render_field form.cooking_time class="form-control border-2 border-start-0 border-end-0" %}
                                         <span class="input-group-text bg-light text-muted border-2">Minutes</span>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="{{ form.instructions.id_for_label }}" class="form-label fw-semibold">Preparation Steps</label>
-                                    {% render_field form.instructions class="form-control border-2" rows="8" placeholder="Type step by step thoroughly..." %}
+                                    {% render_field form.instructions class="form-control border-2" rows="8" %}
                                 </div>
                             </div>
 
@@ -75,12 +85,11 @@
                                     <i class="bi bi-egg-fried me-2"></i>Ingredients
                                 </h4>
                                 
-                                <p class="text-muted small mb-3">Add the ingredients and the exact amount.</p>
+                                <p class="text-muted small mb-3">Modify ingredients or quantities as needed.</p>
                                 
                                 {{ ingredients.management_form }}
 
                                 <div id="ingredient-container" class="border rounded bg-light p-2 mb-3">
-                                    
                                     <div class="row g-2 mb-2 pb-2 border-bottom fw-bold text-muted small text-center">
                                         <div class="col-7 text-start">Ingredient</div>
                                         <div class="col-4">Amount</div>
@@ -95,15 +104,15 @@
                                             {% render_field ingredient_form.ingredient class="form-control form-control-sm" %}
                                         </div>
                                         <div class="col-4">
-                                            {% render_field ingredient_form.quantity class="form-control form-control-sm" placeholder="E.g. 500g" %}
+                                            {% render_field ingredient_form.quantity class="form-control form-control-sm" %}
                                         </div>
                                         <div class="col-1 text-end">
                                             {% if ingredients.can_delete %}
                                                 <div class="d-none">{{ ingredient_form.DELETE }}</div>
+                                                <button type="button" class="btn btn-link text-danger p-0 remove-ingredient">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
                                             {% endif %}
-                                            <button type="button" class="btn btn-link text-danger p-0 remove-ingredient">
-                                                <i class="bi bi-trash3"></i>
-                                            </button>
                                         </div>
                                     </div>
                                     {% endfor %}
@@ -132,4 +141,3 @@
 {% block scripts %}
     <script src="{% static 'recipes/js/add_recipe.js' %}"></script>
 {% endblock scripts %}
-
