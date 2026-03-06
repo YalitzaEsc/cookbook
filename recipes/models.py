@@ -4,11 +4,26 @@ from django.urls import reverse
 
 # Create your models here.
 
+class Category(models.Model):
+    category_name = models.CharField(max_length=50)
+    
+    class Meta:
+        verbose_name_plural = 'Categories'
+    
+    def __str__(self):
+        return self.category_name
+    
 class Recipe(models.Model):
     title = models.CharField(max_length=100)
+    short_description = models.CharField(max_length=150)
     date_of_post = models.DateTimeField(auto_now=True)
     cooking_time = models.PositiveIntegerField() 
     instructions = models.TextField()
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True
+    )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
